@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { Resend } from 'resend';
 import { i18n } from '../../i18n';
 
 // This endpoint must be server-rendered to handle POST requests
@@ -92,32 +93,29 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    // Send email via Resend API
-    const emailResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: `${i18n.site.title} <noreply@klinikforortopaedkirurgi.dk>`,
-        to: [contactEmail],
-        reply_to: data.email,
-        subject: `${i18n.email.newInquiryFrom} ${data.name}`,
-        html: `
-          <h2>${i18n.email.newInquiryTitle}</h2>
-          <p><strong>${i18n.contactForm.name}:</strong> ${escapeHtml(data.name)}</p>
-          <p><strong>${i18n.contactForm.email}:</strong> ${escapeHtml(data.email)}</p>
-          ${data.phone ? `<p><strong>${i18n.contactForm.phone}:</strong> ${escapeHtml(data.phone)}</p>` : ''}
-          <hr>
-          <p><strong>${i18n.contactForm.message}:</strong></p>
-          <p>${escapeHtml(data.message).replace(/\n/g, '<br>')}</p>
-          <hr>
-          <p style="color: #666; font-size: 12px;">
-            ${i18n.email.sentFrom}
-          </p>
-        `,
-        text: `
+    // Initialize Resend client
+    const resend = new Resend(resendApiKey);
+
+    // Send email using Resend SDK
+    const { error } = await resend.emails.send({
+      from: `${i18n.site.title} <noreply@klinikforortopaedkirurgi.dk>`,
+      to: [contactEmail],
+      replyTo: data.email,
+      subject: `${i18n.email.newInquiryFrom} ${data.name}`,
+      html: `
+        <h2>${i18n.email.newInquiryTitle}</h2>
+        <p><strong>${i18n.contactForm.name}:</strong> ${escapeHtml(data.name)}</p>
+        <p><strong>${i18n.contactForm.email}:</strong> ${escapeHtml(data.email)}</p>
+        ${data.phone ? `<p><strong>${i18n.contactForm.phone}:</strong> ${escapeHtml(data.phone)}</p>` : ''}
+        <hr>
+        <p><strong>${i18n.contactForm.message}:</strong></p>
+        <p>${escapeHtml(data.message).replace(/\n/g, '<br>')}</p>
+        <hr>
+        <p style="color: #666; font-size: 12px;">
+          ${i18n.email.sentFrom}
+        </p>
+      `,
+      text: `
 ${i18n.email.newInquiryTitle}
 
 ${i18n.contactForm.name}: ${data.name}
@@ -129,13 +127,11 @@ ${data.message}
 
 ---
 ${i18n.email.sentFrom}
-        `.trim(),
-      }),
+      `.trim(),
     });
 
-    if (!emailResponse.ok) {
-      const errorData = await emailResponse.text();
-      console.error('Resend API error:', errorData);
+    if (error) {
+      console.error('Resend error:', error);
       return new Response(
         JSON.stringify({ success: false, message: messages.emailFailed }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
