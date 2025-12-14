@@ -98,7 +98,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // Send email using Resend SDK
     const { error } = await resend.emails.send({
-      from: `${i18n.site.title} <noreply@klinikforortopaedkirurgi.dk>`,
+      from: `${i18n.site.title} <noreply@bergmania.dk>`,
       to: [contactEmail],
       replyTo: data.email,
       subject: `${i18n.email.newInquiryFrom} ${data.name}`,
