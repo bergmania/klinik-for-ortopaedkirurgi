@@ -102,32 +102,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
       to: [contactEmail],
       replyTo: data.email,
       subject: `${i18n.email.newInquiryFrom} ${data.name}`,
-      html: `
-        <h2>${i18n.email.newInquiryTitle}</h2>
-        <p><strong>${i18n.contactForm.name}:</strong> ${escapeHtml(data.name)}</p>
-        <p><strong>${i18n.contactForm.email}:</strong> ${escapeHtml(data.email)}</p>
-        ${data.phone ? `<p><strong>${i18n.contactForm.phone}:</strong> ${escapeHtml(data.phone)}</p>` : ''}
-        <hr>
-        <p><strong>${i18n.contactForm.message}:</strong></p>
-        <p>${escapeHtml(data.message).replace(/\n/g, '<br>')}</p>
-        <hr>
-        <p style="color: #666; font-size: 12px;">
-          ${i18n.email.sentFrom}
-        </p>
-      `,
-      text: `
-${i18n.email.newInquiryTitle}
-
-${i18n.contactForm.name}: ${data.name}
-${i18n.contactForm.email}: ${data.email}
-${data.phone ? `${i18n.contactForm.phone}: ${data.phone}` : ''}
-
-${i18n.contactForm.message}:
-${data.message}
-
----
-${i18n.email.sentFrom}
-      `.trim(),
+      html: generateEmailHtml(data),
+      text: generateEmailText(data),
     });
 
     if (error) {
@@ -162,4 +138,135 @@ function escapeHtml(text: string): string {
     "'": '&#039;',
   };
   return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+// Generate styled HTML email
+function generateEmailHtml(data: ContactFormData): string {
+  return `
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f5f5f5;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width: 600px; width: 100%;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #1a5f7a 0%, #0d3d4d 100%); padding: 30px 40px; border-radius: 12px 12px 0 0;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">
+                ${i18n.site.title}
+              </h1>
+              <p style="margin: 8px 0 0; color: rgba(255,255,255,0.8); font-size: 14px;">
+                ${i18n.email.newInquiryTitle}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="background-color: #ffffff; padding: 40px;">
+
+              <!-- Contact Info Card -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f8fafb; border-radius: 8px; border-left: 4px solid #1a5f7a; margin-bottom: 24px;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td style="padding-bottom: 12px;">
+                          <span style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #1a5f7a; font-weight: 600; margin-bottom: 4px;">${i18n.contactForm.name}</span>
+                          <span style="display: block; font-size: 16px; color: #2c3e50; font-weight: 500;">${escapeHtml(data.name)}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding-bottom: 12px;">
+                          <span style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #1a5f7a; font-weight: 600; margin-bottom: 4px;">${i18n.contactForm.email}</span>
+                          <a href="mailto:${escapeHtml(data.email)}" style="display: block; font-size: 16px; color: #1a5f7a; text-decoration: none;">${escapeHtml(data.email)}</a>
+                        </td>
+                      </tr>
+                      ${data.phone ? `
+                      <tr>
+                        <td>
+                          <span style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #1a5f7a; font-weight: 600; margin-bottom: 4px;">${i18n.contactForm.phone}</span>
+                          <a href="tel:${escapeHtml(data.phone.replace(/\s/g, ''))}" style="display: block; font-size: 16px; color: #1a5f7a; text-decoration: none;">${escapeHtml(data.phone)}</a>
+                        </td>
+                      </tr>
+                      ` : ''}
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Message -->
+              <div style="margin-bottom: 24px;">
+                <h2 style="margin: 0 0 12px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #1a5f7a; font-weight: 600;">${i18n.contactForm.message}</h2>
+                <div style="background-color: #ffffff; border: 1px solid #e8eef1; border-radius: 8px; padding: 20px;">
+                  <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #2c3e50; white-space: pre-wrap;">${escapeHtml(data.message)}</p>
+                </div>
+              </div>
+
+              <!-- Reply Button -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center">
+                    <a href="mailto:${escapeHtml(data.email)}" style="display: inline-block; background-color: #1a5f7a; color: #ffffff; font-size: 14px; font-weight: 600; text-decoration: none; padding: 14px 28px; border-radius: 8px;">
+                      Svar på henvendelse
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #2c3e50; padding: 24px 40px; border-radius: 0 0 12px 12px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center">
+                    <p style="margin: 0 0 8px; font-size: 13px; color: rgba(255,255,255,0.7);">
+                      ${i18n.email.sentFrom}
+                    </p>
+                    <p style="margin: 0; font-size: 12px; color: rgba(255,255,255,0.5);">
+                      ${i18n.contact.address.street}, ${i18n.contact.address.city} · ${i18n.contact.phone}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim();
+}
+
+// Generate plain text email
+function generateEmailText(data: ContactFormData): string {
+  return `
+${i18n.email.newInquiryTitle}
+${'='.repeat(40)}
+
+${i18n.contactForm.name}: ${data.name}
+${i18n.contactForm.email}: ${data.email}
+${data.phone ? `${i18n.contactForm.phone}: ${data.phone}` : ''}
+
+${i18n.contactForm.message}:
+${'-'.repeat(20)}
+${data.message}
+
+${'='.repeat(40)}
+${i18n.email.sentFrom}
+${i18n.contact.address.street}, ${i18n.contact.address.city}
+${i18n.contact.phone}
+  `.trim();
 }
