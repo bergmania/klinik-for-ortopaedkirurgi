@@ -1,6 +1,9 @@
 import type { APIRoute } from 'astro';
 import { i18n } from '../../i18n';
 
+// This endpoint must be server-rendered to handle POST requests
+export const prerender = false;
+
 interface ContactFormData {
   name: string;
   email: string;
