@@ -13,5 +13,6 @@
 	"upload_source_maps": true,
 	"vars": {
 		"CONTACT_EMAIL": "mail@bergmania.dk"
-	}
+	},
+	"secrets": ["RESEND_API_KEY"]
 }

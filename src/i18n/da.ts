@@ -800,6 +800,15 @@ Der er ikke rapporteret nogen alvorlige bivirkninger ved brug af Arthrosamid©, 
       email: "Indtast venligst en gyldig email-adresse",
       message: "Indtast venligst en besked",
     },
+    api: {
+      rateLimited: "For mange henvendelser. Prøv igen om lidt.",
+      missingFields: "Udfyld venligst alle påkrævede felter",
+      invalidEmail: "Ugyldig email-adresse",
+      emailNotConfigured: "Email-service ikke konfigureret",
+      emailFailed: "Kunne ikke sende email",
+      genericError: "Der opstod en fejl",
+      messageSent: "Besked sendt",
+    },
   },
 
   // Common
@@ -983,6 +992,13 @@ Der er ikke rapporteret nogen alvorlige bivirkninger ved brug af Arthrosamid©, 
     copyright: "Klinik for Ortopædkirurgi",
     allRightsReserved: "Alle rettigheder forbeholdes",
     cookiePolicy: "Cookie og privatlivspolitik",
+  },
+
+  // Email templates
+  email: {
+    newInquiryFrom: "Ny henvendelse fra",
+    newInquiryTitle: "Ny henvendelse fra kontaktformularen",
+    sentFrom: "Sendt fra kontaktformularen på klinikforortopaedkirurgi.dk",
   },
 
   // 404 Error page
