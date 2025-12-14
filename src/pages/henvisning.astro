@@ -1,0 +1,204 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { i18n } from '../i18n';
+import { CONTACT } from '../consts';
+
+const referral = i18n.referral;
+---
+
+<BaseLayout title={referral.title} description={referral.intro}>
+  <section class="page-hero">
+    <div class="container">
+      <h1>{referral.title}</h1>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container container-narrow">
+      <p class="intro">{referral.intro}</p>
+
+      <div class="info-box">
+        <h3>{referral.validity.title}</h3>
+        <p>{referral.validity.text}</p>
+      </div>
+
+      <h2>{referral.coverage.title}</h2>
+      <p>{referral.coverage.text}</p>
+
+      <div class="steps-section">
+        <h2>{i18n.ui.howItWorks}</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>{i18n.ui.step1Title}</h3>
+              <p>{i18n.ui.step1Text}</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>{i18n.ui.step2Title}</h3>
+              <p>{i18n.ui.step2Text}</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>{i18n.ui.step3Title}</h3>
+              <p>{i18n.ui.step3Text}</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>{i18n.ui.step4Title}</h3>
+              <p>{i18n.ui.step4Text}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="important-notice">
+        <h3>{i18n.ui.importantToKnow}</h3>
+        <ul>
+          <li>{i18n.ui.importantPoint1}</li>
+          <li>{i18n.ui.importantPoint2}</li>
+          <li>{i18n.ui.importantPoint3}</li>
+          <li>{i18n.ui.importantPoint4}</li>
+        </ul>
+      </div>
+
+      <div class="contact-info-section">
+        <h2>{i18n.common.contactUs}</h2>
+        <p>{i18n.ui.questionsAboutReferral}</p>
+        <div class="contact-details">
+          <a href={`tel:${CONTACT.phone.replace(/\s/g, '')}`} class="btn btn-primary">
+            {i18n.common.call} {CONTACT.phone}
+          </a>
+          <p class="phone-hours">
+            {i18n.hours.phoneHours.title}: {i18n.hours.phoneHours.weekdays}, {i18n.hours.phoneHours.morning} og {i18n.hours.phoneHours.afternoon}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    padding: 4rem 0;
+  }
+
+  .page-hero h1 {
+    color: var(--white);
+    margin: 0;
+  }
+
+  .content {
+    padding: 4rem 0;
+  }
+
+  .intro {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .content h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-dark);
+  }
+
+  .steps-section {
+    margin-top: 3rem;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .step {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .step-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+  }
+
+  .step-content p {
+    margin: 0;
+    color: rgb(var(--gray));
+  }
+
+  .important-notice {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(var(--gray-light), 0.5);
+    border-radius: 12px;
+    border-left: 4px solid var(--primary);
+  }
+
+  .important-notice h3 {
+    margin: 0 0 1rem 0;
+    color: var(--primary-dark);
+  }
+
+  .important-notice ul {
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  .important-notice li {
+    margin-bottom: 0.75rem;
+  }
+
+  .important-notice li:last-child {
+    margin-bottom: 0;
+  }
+
+  .contact-info-section {
+    margin-top: 3rem;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(var(--gray-light), 0.3);
+    border-radius: 12px;
+  }
+
+  .contact-info-section h2 {
+    margin-top: 0;
+  }
+
+  .contact-details {
+    margin-top: 1.5rem;
+  }
+
+  .phone-hours {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: rgb(var(--gray));
+  }
+</style>

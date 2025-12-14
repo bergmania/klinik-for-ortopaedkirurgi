@@ -1,64 +1,126 @@
-# Astro Starter Kit: Blog
+# Klinik for Ortopædkirurgi
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/astro-blog-starter-template)
+Website for Klinik for Ortopædkirurgi ved Sinan Said & Jan Beck Mikkelsen i Odense.
 
-![Astro Template Preview](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
+## Tech Stack
 
-<!-- dash-content-start -->
+- **Framework**: [Astro](https://astro.build/) 5.x
+- **Hosting**: [Cloudflare Pages](https://pages.cloudflare.com/) / Workers
+- **Styling**: Pure CSS med CSS Custom Properties
+- **i18n**: Struktureret indhold i `/src/i18n/` (dansk som standard, klar til oversættelse)
 
-Create a blog with Astro and deploy it on Cloudflare Workers as a [static website](https://developers.cloudflare.com/workers/static-assets/).
+## Projekt Struktur
 
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-- ✅ Built-in Observability logging
-
-<!-- dash-content-end -->
-
-## Getting Started
-
-Outside of this repo, you can start a new project with this template using [C3](https://developers.cloudflare.com/pages/get-started/c3/) (the `create-cloudflare` CLI):
-
-```bash
-npm create cloudflare@latest -- --template=cloudflare/templates/astro-blog-starter-template
+```
+src/
+├── components/          # Genbrugelige komponenter
+│   ├── Header.astro    # Navigation og logo
+│   ├── Footer.astro    # Footer med kontaktinfo
+│   └── BaseHead.astro  # SEO og meta tags
+├── i18n/               # Oversættelser og indhold
+│   ├── da.ts          # Dansk indhold (primær)
+│   └── index.ts       # i18n utilities
+├── layouts/            # Side layouts
+│   └── BaseLayout.astro
+├── pages/              # Sider (file-based routing)
+│   ├── index.astro    # Forside
+│   ├── om-klinikken.astro
+│   ├── ansatte.astro
+│   ├── kontakt.astro
+│   ├── henvisning.astro
+│   ├── patientvejledninger.astro
+│   ├── behandlinger/   # Behandlingssider
+│   └── api/           # API endpoints
+│       └── contact.ts # Kontaktformular API
+├── styles/
+│   └── global.css     # Global styling
+└── consts.ts          # Site konfiguration
 ```
 
-A live public deployment of this template is available at [https://astro-blog-starter-template.templates.workers.dev](https://astro-blog-starter-template.templates.workers.dev)
+## Kommandoer
 
-## 🚀 Project Structure
+| Kommando | Beskrivelse |
+|:---------|:------------|
+| `npm install` | Installer dependencies |
+| `npm run dev` | Start lokal dev server på `localhost:4321` |
+| `npm run build` | Byg produktionssite til `./dist/` |
+| `npm run preview` | Preview build lokalt |
+| `npm run deploy` | Deploy til Cloudflare |
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Deployment til Cloudflare Pages
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### 1. Opret Cloudflare Pages projekt
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+1. Log ind på [Cloudflare Dashboard](https://dash.cloudflare.com/)
+2. Gå til **Workers & Pages** > **Create** > **Pages**
+3. Forbind dit GitHub repository
+4. Konfigurer build:
+   - Build command: `npm run build`
+   - Build output directory: `dist`
 
-Any static assets, like images, can be placed in the `public/` directory.
+### 2. Konfigurer Email (Kontaktformular)
 
-## 🧞 Commands
+Kontaktformularen bruger [Resend](https://resend.com/) til at sende emails. For at aktivere:
 
-All commands are run from the root of the project, from a terminal:
+1. Opret en konto på [resend.com](https://resend.com/)
+2. Verificer dit domæne
+3. Opret en API nøgle
+4. Tilføj environment variable i Cloudflare Pages:
+   - Gå til **Settings** > **Environment variables**
+   - Tilføj `RESEND_API_KEY` med din API nøgle
 
-| Command                           | Action                                           |
-| :-------------------------------- | :----------------------------------------------- |
-| `npm install`                     | Installs dependencies                            |
-| `npm run dev`                     | Starts local dev server at `localhost:4321`      |
-| `npm run build`                   | Build your production site to `./dist/`          |
-| `npm run preview`                 | Preview your build locally, before deploying     |
-| `npm run astro ...`               | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help`         | Get help using the Astro CLI                     |
-| `npm run build && npm run deploy` | Deploy your production site to Cloudflare        |
-| `npm wrangler tail`               | View real-time logs for all Workers              |
+Alternativt kan du bruge en anden email service ved at modificere `/src/pages/api/contact.ts`.
 
-## 👀 Want to learn more?
+### 3. Custom Domain
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+1. Gå til dit Cloudflare Pages projekt
+2. Klik på **Custom domains**
+3. Tilføj `klinikforortopaedkirurgi.dk`
+4. Følg DNS instruktionerne
 
-## Credit
+## Indhold og Oversættelser
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Alt indhold er struktureret i `/src/i18n/da.ts`. Dette gør det nemt at:
+
+- Opdatere tekst centralt
+- Tilføje nye sprog (kopier `da.ts` til fx `en.ts`)
+- Holde indhold konsistent på tværs af sider
+
+### Tilføj et nyt sprog
+
+1. Kopier `src/i18n/da.ts` til fx `src/i18n/en.ts`
+2. Oversæt indholdet
+3. Opdater `src/i18n/index.ts`:
+```typescript
+import { en } from './en';
+export const languages = {
+  da: 'Dansk',
+  en: 'English',
+};
+const translations = { da, en };
+```
+
+## Udvikling
+
+### Rediger indhold
+
+- **Tekster**: Rediger `/src/i18n/da.ts`
+- **Kontaktinfo**: Opdater `contact` objekt i i18n filen
+- **Åbningstider/Ferier**: Opdater `hours` og `holidays` objekter
+- **Behandlinger**: Tilføj/rediger i `treatments.categories`
+
+### Tilføj ny side
+
+1. Opret ny `.astro` fil i `/src/pages/`
+2. Importer `BaseLayout` og `i18n`
+3. Tilføj navigation link i `/src/components/Header.astro`
+
+### Styling
+
+Global styling er i `/src/styles/global.css` med CSS Custom Properties for farver, spacing, osv.
+
+## Kontakt
+
+- **Telefon**: 66 13 41 42
+- **Adresse**: Skt. Anne Plads 2-4, 4. sal, 5000 Odense C
+- **Ydernummer**: 244333

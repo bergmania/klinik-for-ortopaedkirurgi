@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { i18n } from '../i18n';
+---
+
+<BaseLayout title={i18n.error404.title} description={i18n.error404.description} noindex={true}>
+  <section class="error-page">
+    <div class="container">
+      <div class="error-content">
+        <div class="error-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M16 16s-1.5-2-4-2-4 2-4 2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+          </svg>
+        </div>
+        <h1>404</h1>
+        <p class="error-title">{i18n.error404.heading}</p>
+        <p class="error-description">{i18n.error404.text}</p>
+
+        <div class="error-actions">
+          <a href="/" class="btn btn-primary">{i18n.error404.goHome}</a>
+          <a href="/kontakt" class="btn btn-secondary">{i18n.common.contactUs}</a>
+        </div>
+
+        <div class="helpful-links">
+          <h2>{i18n.error404.maybeYouLookFor}</h2>
+          <ul>
+            <li><a href="/behandlinger">{i18n.nav.treatments}</a></li>
+            <li><a href="/patientvejledninger">{i18n.nav.patientGuides}</a></li>
+            <li><a href="/henvisning">{i18n.nav.referral}</a></li>
+            <li><a href="/om-klinikken">{i18n.nav.about}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .error-page {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    padding: 4rem 0;
+  }
+
+  .error-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .error-icon {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-size: 6rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .error-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin: 0.5rem 0 1rem;
+  }
+
+  .error-description {
+    color: rgb(var(--gray));
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .helpful-links {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(var(--gray), 0.2);
+  }
+
+  .helpful-links h2 {
+    font-size: 1.1rem;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+  }
+
+  .helpful-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .helpful-links a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .helpful-links a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 4rem;
+    }
+
+    .error-title {
+      font-size: 1.25rem;
+    }
+  }
+</style>

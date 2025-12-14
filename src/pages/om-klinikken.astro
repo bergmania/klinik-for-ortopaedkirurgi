@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { i18n } from '../i18n';
+import { CONTACT } from '../consts';
+---
+
+<BaseLayout title={i18n.about.title} description={i18n.about.intro}>
+  <section class="page-hero">
+    <div class="container">
+      <h1>{i18n.about.title}</h1>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container container-narrow">
+      <p class="intro">{i18n.about.intro}</p>
+
+      <div class="info-box info-box-accent">
+        <h3>{i18n.staffingUpdate.title}</h3>
+        <p>{i18n.staffingUpdate.text}</p>
+      </div>
+
+      <h2>{i18n.about.location.title}</h2>
+      <p>{i18n.about.location.text}</p>
+      <p>{i18n.about.location.accessibility}</p>
+      <p>{i18n.about.location.transport}</p>
+
+      <h2>{i18n.about.insurance.title}</h2>
+      <p>{i18n.about.insurance.public}</p>
+      <p>{i18n.about.insurance.private}</p>
+
+      <h2>{i18n.about.accreditation.title}</h2>
+      <p>{i18n.about.accreditation.text}</p>
+      <div class="accreditation-badge">
+        <span class="badge badge-accent">{i18n.ui.ddkmAccredited}</span>
+      </div>
+
+      <div class="info-section">
+        <h2>{i18n.ui.identification}</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <strong>{i18n.ui.locationNumber}</strong>
+            <span>{CONTACT.locationNumber}</span>
+          </div>
+          <div class="info-item">
+            <strong>{i18n.ui.providerNumber}</strong>
+            <span>{CONTACT.providerNumber}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>{i18n.ui.questionsTitle}</h2>
+      <p>{i18n.ui.questionsAboutClinic}</p>
+      <a href="/kontakt" class="btn btn-primary">{i18n.common.contactUs}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    padding: 4rem 0;
+  }
+
+  .page-hero h1 {
+    color: var(--white);
+    margin: 0;
+  }
+
+  .content {
+    padding: 4rem 0;
+  }
+
+  .intro {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .content h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-dark);
+  }
+
+  .content h2:first-of-type {
+    margin-top: 2rem;
+  }
+
+  .accreditation-badge {
+    margin-top: 1rem;
+  }
+
+  .info-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(var(--gray-light), 0.5);
+    border-radius: 12px;
+  }
+
+  .info-section h2 {
+    margin-top: 0;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .info-item strong {
+    font-size: 0.9rem;
+    color: rgb(var(--gray));
+  }
+
+  .info-item span {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .cta-section {
+    padding: 4rem 0;
+    background: rgba(var(--gray-light), 0.3);
+  }
+
+  .cta-section h2 {
+    margin-bottom: 1rem;
+  }
+
+  .cta-section p {
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+    color: rgb(var(--gray));
+  }
+
+  @media (max-width: 768px) {
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

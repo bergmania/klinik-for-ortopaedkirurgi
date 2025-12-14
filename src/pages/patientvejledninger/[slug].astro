@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { i18n, type PatientGuide } from '../../i18n';
+
+export function getStaticPaths() {
+  const guides = i18n.patientGuides.guides;
+
+  return Object.values(guides).map((guide: PatientGuide) => ({
+    params: { slug: guide.slug },
+    props: { guide }
+  }));
+}
+
+const { guide } = Astro.props as { guide: PatientGuide };
+---
+
+<BaseLayout title={guide.title} description={guide.description}>
+  <section class="page-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="/patientvejledninger">{i18n.patientGuides.title}</a>
+        <span>/</span>
+        <span>{guide.title}</span>
+      </nav>
+      <h1>{guide.title}</h1>
+      {guide.subtitle && <p class="hero-subtitle">{guide.subtitle}</p>}
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container container-narrow">
+      <div class="guide-content">
+        <p class="label">{i18n.ui.patientInfo}</p>
+
+        <div class="article-content">
+          {guide.content.split('\n\n').map((paragraph: string) => {
+            // Check if paragraph is a header (ends with :)
+            if (paragraph.endsWith(':')) {
+              return <h2>{paragraph.slice(0, -1)}</h2>;
+            }
+            // Check if paragraph starts with a header pattern
+            if (paragraph.includes(':\n')) {
+              const [header, ...rest] = paragraph.split(':\n');
+              return (
+                <>
+                  <h2>{header}</h2>
+                  <p>{rest.join('\n')}</p>
+                </>
+              );
+            }
+            // Check if it's a list (starts with -)
+            if (paragraph.startsWith('- ')) {
+              const items = paragraph.split('\n').filter((line: string) => line.startsWith('- '));
+              return (
+                <ul>
+                  {items.map((item: string) => <li>{item.slice(2)}</li>)}
+                </ul>
+              );
+            }
+            // Regular paragraph
+            return <p>{paragraph}</p>;
+          })}
+        </div>
+
+        <div class="info-box">
+          <h3>{i18n.ui.contactClinic}</h3>
+          <p>{i18n.ui.contactClinicText} <a href={`tel:${i18n.contact.phone.replace(/\s/g, '')}`}>{i18n.contact.phone}</a>.</p>
+        </div>
+      </div>
+
+      <div class="other-guides">
+        <h2>{i18n.ui.otherGuides}</h2>
+        <div class="guides-grid">
+          {Object.values(i18n.patientGuides.guides)
+            .filter((g: PatientGuide) => g.slug !== guide.slug)
+            .slice(0, 4)
+            .map((g: PatientGuide) => (
+              <a href={`/patientvejledninger/${g.slug}`} class="guide-link card card-link">
+                <span>{g.title}</span>
+                <span class="arrow">→</span>
+              </a>
+            ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    padding: 4rem 0;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    flex-wrap: wrap;
+  }
+
+  .breadcrumb a {
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .page-hero h1 {
+    color: var(--white);
+    margin: 0;
+  }
+
+  .hero-subtitle {
+    margin-top: 0.5rem;
+    opacity: 0.9;
+    font-size: 1.1rem;
+  }
+
+  .content {
+    padding: 4rem 0;
+  }
+
+  .label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .article-content {
+    margin-bottom: 2rem;
+  }
+
+  .article-content p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+
+  .article-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    color: var(--primary-dark);
+  }
+
+  .article-content ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .article-content li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+
+  .guide-content {
+    margin-bottom: 4rem;
+  }
+
+  .other-guides h2 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-dark);
+  }
+
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .guide-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+  }
+
+  .guide-link .arrow {
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+  }
+
+  .guide-link:hover .arrow {
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .guides-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,47 +1,137 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
+import { i18n } from '../i18n';
+import { CONTACT } from '../consts';
 
 interface Props {
-	title: string;
-	description: string;
-	image?: string;
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const {
+  title,
+  description,
+  image = '/og-image.jpg',
+  type = 'website',
+  noindex = false
+} = Astro.props;
 
-const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
+// Structured data for medical clinic
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  "name": i18n.site.title,
+  "description": i18n.site.description,
+  "url": Astro.site?.toString(),
+  "telephone": CONTACT.phone,
+  "faxNumber": CONTACT.fax,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": CONTACT.address.street,
+    "addressLocality": "Odense",
+    "postalCode": "5000",
+    "addressCountry": "DK"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "55.3976",
+    "longitude": "10.3876"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+      "opens": "09:00",
+      "closes": "15:00"
+    }
+  ],
+  "medicalSpecialty": "Orthopedic",
+  "priceRange": "$$",
+  "image": new URL(image, Astro.site).toString(),
+  "sameAs": []
+};
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<meta name="generator" content={Astro.generator} />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-<!-- Font preloads -->
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#1a5f7a" />
+
+<!-- Preconnect to external resources -->
+<link rel="preconnect" href="https://unpkg.com" />
+
+<!-- Font preloads - critical fonts only -->
 <link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
 <link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
 
+<!-- DNS prefetch for performance -->
+<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+
+<!-- Language and locale -->
+<meta property="og:locale" content="da_DK" />
+<link rel="alternate" hreflang="da" href={canonicalURL} />
+<link rel="alternate" hreflang="x-default" href={canonicalURL} />
+
+<!-- Robots -->
+{noindex ? (
+  <meta name="robots" content="noindex, nofollow" />
+) : (
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+)}
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+<meta name="author" content={i18n.site.title} />
+<meta name="generator" content={Astro.generator} />
+
+<!-- Keywords for medical SEO -->
+<meta name="keywords" content="ortopædkirurgi, speciallæge, Odense, knæ, fod, hånd, operation, kirurgi, slidgigt, arthrosamid, åreknuder, gigtlidelser" />
+
+<!-- Geo tags for local SEO -->
+<meta name="geo.region" content="DK-83" />
+<meta name="geo.placename" content="Odense" />
+<meta name="geo.position" content="55.3976;10.3876" />
+<meta name="ICBM" content="55.3976, 10.3876" />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={type} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={title} />
+<meta property="og:site_name" content={i18n.site.title} />
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={Astro.url} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image, Astro.url)} />
+<meta name="twitter:image:alt" content={title} />
+
+<!-- Structured Data (JSON-LD) -->
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+<!-- Security headers (CSP handled by Cloudflare) -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />

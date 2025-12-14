@@ -1,0 +1,243 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { i18n } from '../../i18n';
+
+export function getStaticPaths() {
+  const categories = i18n.treatments.categories;
+
+  return [
+    { params: { category: categories.varicoseVeins.slug }, props: { category: categories.varicoseVeins, key: 'varicoseVeins' } },
+    { params: { category: categories.arthritis.slug }, props: { category: categories.arthritis, key: 'arthritis' } },
+    { params: { category: categories.arthrosamid.slug }, props: { category: categories.arthrosamid, key: 'arthrosamid' } },
+    { params: { category: categories.knee.slug }, props: { category: categories.knee, key: 'knee' } },
+    { params: { category: categories.foot.slug }, props: { category: categories.foot, key: 'foot' } },
+    { params: { category: categories.hand.slug }, props: { category: categories.hand, key: 'hand' } },
+  ];
+}
+
+const { category, key } = Astro.props;
+const hasTreatments = 'treatments' in category;
+---
+
+<BaseLayout title={category.title} description={category.description}>
+  <section class="page-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="/behandlinger">{i18n.treatments.title}</a>
+        <span>/</span>
+        <span>{category.title}</span>
+      </nav>
+      <h1>{category.title}</h1>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container container-narrow">
+      <p class="intro">{category.description}</p>
+
+      {hasTreatments && (
+        <div class="subcategories">
+          <h2>{i18n.ui.treatments}</h2>
+          <div class="subcategory-grid">
+            {Object.values(category.treatments).map((treatment: any) => (
+              <a href={`/behandlinger/${category.slug}/${treatment.slug}`} class="subcategory-card card card-link">
+                <h3>{treatment.title}</h3>
+                <span class="arrow">→</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {key === 'varicoseVeins' && (
+        <div class="detailed-content">
+          <h2>{i18n.ui.varicoseVeinsSymptoms}</h2>
+          <p>{i18n.ui.varicoseVeinsSymptomsText}</p>
+
+          <h2>{i18n.ui.varicoseVeinsRiskFactors}</h2>
+          <p>{i18n.ui.varicoseVeinsRiskFactorsText}</p>
+
+          <h2>{i18n.ui.varicoseVeinsTreatment}</h2>
+          <p>{i18n.ui.varicoseVeinsTreatmentText}</p>
+          <p>{i18n.ui.varicoseVeinsTreatmentText2}</p>
+
+          <div class="info-box">
+            <h3>{i18n.ui.varicoseVeinsReferral}</h3>
+            <p>{i18n.ui.varicoseVeinsReferralText}</p>
+          </div>
+        </div>
+      )}
+
+      {key === 'arthritis' && (
+        <div class="detailed-content">
+          <h2>{i18n.ui.arthritisAbout}</h2>
+          <p>{i18n.ui.arthritisAboutText}</p>
+
+          <h2>{i18n.ui.arthritisAffectedAreas}</h2>
+          <p>{i18n.ui.arthritisAffectedAreasText}</p>
+
+          <h2>{i18n.ui.arthritisPathology}</h2>
+          <p>{i18n.ui.arthritisPathologyText}</p>
+
+          <h2>{i18n.ui.arthritisSystemicSymptoms}</h2>
+          <p>{i18n.ui.arthritisSystemicSymptomsText}</p>
+        </div>
+      )}
+
+      {key === 'arthrosamid' && (
+        <div class="detailed-content">
+          <h2>{i18n.ui.arthrosamidWhat}</h2>
+          <p>{i18n.ui.arthrosamidWhatText}</p>
+
+          <h2>{i18n.ui.arthrosamidPurpose}</h2>
+          <p>{i18n.ui.arthrosamidPurposeText}</p>
+
+          <h2>{i18n.ui.arthrosamidResults}</h2>
+          <p>{i18n.ui.arthrosamidResultsText}</p>
+          <ul>
+            <li>{i18n.ui.arthrosamidResult1}</li>
+            <li>{i18n.ui.arthrosamidResult2}</li>
+            <li>{i18n.ui.arthrosamidResult3}</li>
+          </ul>
+
+          <h2>{i18n.ui.arthrosamidProcedure}</h2>
+          <p>{i18n.ui.arthrosamidProcedureText}</p>
+          <ul>
+            <li>{i18n.ui.arthrosamidProcedure1}</li>
+            <li>{i18n.ui.arthrosamidProcedure2}</li>
+            <li>{i18n.ui.arthrosamidProcedure3}</li>
+            <li>{i18n.ui.arthrosamidProcedure4}</li>
+          </ul>
+
+          <h2>{i18n.ui.arthrosamidRecovery}</h2>
+          <p>{i18n.ui.arthrosamidRecoveryText}</p>
+
+          <div class="info-box info-box-accent">
+            <h3>{i18n.ui.arthrosamidImportant}</h3>
+            <p>{i18n.ui.arthrosamidImportantText}</p>
+          </div>
+        </div>
+      )}
+
+      <div class="contact-cta">
+        <h2>{i18n.ui.questionsAboutTreatment}</h2>
+        <p>{i18n.ui.questionsAboutTreatmentText}</p>
+        <a href="/kontakt" class="btn btn-primary">{i18n.common.contactUs}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    padding: 4rem 0;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .breadcrumb a {
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .page-hero h1 {
+    color: var(--white);
+    margin: 0;
+  }
+
+  .content {
+    padding: 4rem 0;
+  }
+
+  .intro {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .subcategories h2 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-dark);
+  }
+
+  .subcategory-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .subcategory-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .subcategory-card h3 {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .subcategory-card .arrow {
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+  }
+
+  .subcategory-card:hover .arrow {
+    opacity: 1;
+  }
+
+  .detailed-content {
+    margin-top: 2rem;
+  }
+
+  .detailed-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-dark);
+  }
+
+  .detailed-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .detailed-content ul {
+    margin: 1rem 0;
+  }
+
+  .contact-cta {
+    margin-top: 4rem;
+    padding: 2rem;
+    background: rgba(var(--gray-light), 0.5);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .contact-cta h2 {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .contact-cta p {
+    color: rgb(var(--gray));
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .subcategory-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

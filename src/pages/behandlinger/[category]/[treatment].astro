@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { i18n, type Treatment, type TreatmentCategory } from '../../../i18n';
+
+interface PathItem {
+  params: { category: string; treatment: string };
+  props: { category: TreatmentCategory; treatment: Treatment };
+}
+
+export function getStaticPaths() {
+  const categories = i18n.treatments.categories;
+  const paths: PathItem[] = [];
+
+  // Knee treatments
+  if (categories.knee.treatments) {
+    Object.values(categories.knee.treatments).forEach((treatment: Treatment) => {
+      paths.push({
+        params: { category: categories.knee.slug, treatment: treatment.slug },
+        props: { category: categories.knee, treatment }
+      });
+    });
+  }
+
+  // Foot treatments
+  if (categories.foot.treatments) {
+    Object.values(categories.foot.treatments).forEach((treatment: Treatment) => {
+      paths.push({
+        params: { category: categories.foot.slug, treatment: treatment.slug },
+        props: { category: categories.foot, treatment }
+      });
+    });
+  }
+
+  // Hand treatments
+  if (categories.hand.treatments) {
+    Object.values(categories.hand.treatments).forEach((treatment: Treatment) => {
+      paths.push({
+        params: { category: categories.hand.slug, treatment: treatment.slug },
+        props: { category: categories.hand, treatment }
+      });
+    });
+  }
+
+  return paths;
+}
+
+const { category, treatment } = Astro.props as { category: TreatmentCategory; treatment: Treatment };
+---
+
+<BaseLayout title={treatment.title} description={treatment.description || `Behandling af ${treatment.title} hos ${i18n.site.title}`}>
+  <section class="page-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="/behandlinger">{i18n.treatments.title}</a>
+        <span>/</span>
+        <a href={`/behandlinger/${category.slug}`}>{category.title}</a>
+        <span>/</span>
+        <span>{treatment.title}</span>
+      </nav>
+      <h1>{treatment.title}</h1>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container container-narrow">
+      <div class="treatment-content">
+        {treatment.subtitle && <p class="subtitle">{treatment.subtitle}</p>}
+
+        <div class="article-content">
+          {treatment.content.split('\n\n').map((paragraph: string) => {
+            // Check if paragraph is a header (ends with :)
+            if (paragraph.endsWith(':')) {
+              return <h2>{paragraph.slice(0, -1)}</h2>;
+            }
+            // Check if paragraph starts with a header pattern
+            if (paragraph.includes(':\n')) {
+              const [header, ...rest] = paragraph.split(':\n');
+              return (
+                <>
+                  <h2>{header}</h2>
+                  <p>{rest.join('\n')}</p>
+                </>
+              );
+            }
+            // Check if it's a list (starts with -)
+            if (paragraph.startsWith('- ')) {
+              const items = paragraph.split('\n').filter((line: string) => line.startsWith('- '));
+              return (
+                <ul>
+                  {items.map((item: string) => <li>{item.slice(2)}</li>)}
+                </ul>
+              );
+            }
+            // Regular paragraph
+            return <p>{paragraph}</p>;
+          })}
+        </div>
+
+        <div class="info-box">
+          <h3>{i18n.ui.referralRequired}</h3>
+          <p>{i18n.ui.referralRequiredText} <a href="/henvisning">{i18n.ui.readMoreReferral}</a>.</p>
+        </div>
+
+        <div class="contact-cta">
+          <h2>{i18n.ui.bookAppointment}</h2>
+          <p>{i18n.ui.bookAppointmentText}</p>
+          <div class="cta-buttons">
+            <a href={`tel:${i18n.contact.phone.replace(/\s/g, '')}`} class="btn btn-primary">
+              {i18n.common.call} {i18n.contact.phone}
+            </a>
+            <a href="/kontakt" class="btn btn-secondary">
+              {i18n.common.sendMessage}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="related-treatments">
+        <h2>Andre {category.title.toLowerCase()}-behandlinger</h2>
+        <div class="related-grid">
+          {category.treatments && Object.values(category.treatments)
+            .filter((t: any) => t.slug !== treatment.slug)
+            .slice(0, 4)
+            .map((t: any) => (
+              <a href={`/behandlinger/${category.slug}/${t.slug}`} class="related-card card card-link">
+                <span>{t.title}</span>
+                <span class="arrow">→</span>
+              </a>
+            ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    padding: 4rem 0;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    flex-wrap: wrap;
+  }
+
+  .breadcrumb a {
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .page-hero h1 {
+    color: var(--white);
+    margin: 0;
+  }
+
+  .content {
+    padding: 4rem 0;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 2rem;
+  }
+
+  .article-content {
+    margin-bottom: 2rem;
+  }
+
+  .article-content p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+
+  .article-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    color: var(--primary-dark);
+  }
+
+  .article-content ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .article-content li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+
+  .treatment-content {
+    margin-bottom: 4rem;
+  }
+
+  .contact-cta {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(var(--gray-light), 0.5);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .contact-cta h2 {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .contact-cta p {
+    color: rgb(var(--gray));
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .related-treatments h2 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-dark);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .related-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+  }
+
+  .related-card .arrow {
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+  }
+
+  .related-card:hover .arrow {
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

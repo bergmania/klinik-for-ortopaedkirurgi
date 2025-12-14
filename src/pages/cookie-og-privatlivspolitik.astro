@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { i18n } from '../i18n';
+
+const policy = i18n.cookiePolicy;
+---
+
+<BaseLayout title={policy.title} description={policy.intro}>
+  <section class="page-hero">
+    <div class="container">
+      <h1>{policy.title}</h1>
+      <p>{policy.intro}</p>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container container-narrow">
+      <article class="policy-content">
+        <section class="policy-section">
+          <h2>{policy.whatAreCookies}</h2>
+          <p>{policy.whatAreCookiesText}</p>
+        </section>
+
+        <section class="policy-section">
+          <h2>{policy.necessaryCookies}</h2>
+          <p>{policy.necessaryCookiesText}</p>
+        </section>
+
+        <section class="policy-section">
+          <h2>{policy.preferenceCookies}</h2>
+          <p>{policy.preferenceCookiesText}</p>
+        </section>
+
+        <section class="policy-section">
+          <h2>{policy.analyticsCookies}</h2>
+          <p>
+            {policy.analyticsCookiesText}{' '}
+            <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">
+              {policy.analyticsOptOut}
+            </a>.
+          </p>
+        </section>
+
+        <section class="policy-section">
+          <h2>{policy.marketingCookies}</h2>
+          <p>{policy.marketingCookiesText}</p>
+        </section>
+
+        <section class="policy-section">
+          <h2>{policy.manageCookies}</h2>
+          <p>{policy.manageCookiesText}</p>
+        </section>
+
+        <section class="policy-section">
+          <h2>{policy.dataController}</h2>
+          <p>{policy.dataControllerText}</p>
+          <p><strong>{policy.cvr}:</strong> 11 90 58 89</p>
+        </section>
+
+        <div class="consent-notice">
+          <p>{policy.consent}</p>
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    padding: 4rem 0;
+  }
+
+  .page-hero h1 {
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .page-hero p {
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0;
+  }
+
+  .content {
+    padding: 4rem 0;
+  }
+
+  .policy-content {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: var(--box-shadow);
+  }
+
+  .policy-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(var(--gray), 0.1);
+  }
+
+  .policy-section:last-of-type {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .policy-section h2 {
+    font-size: 1.25rem;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+  }
+
+  .policy-section p {
+    line-height: 1.7;
+    color: rgb(var(--gray-dark));
+    margin-bottom: 0.75rem;
+  }
+
+  .policy-section p:last-child {
+    margin-bottom: 0;
+  }
+
+  .policy-section a {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
+  .policy-section a:hover {
+    color: var(--primary-dark);
+  }
+
+  .consent-notice {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(var(--gray-light), 0.5);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+  }
+
+  .consent-notice p {
+    margin: 0;
+    color: rgb(var(--gray-dark));
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .policy-content {
+      padding: 1.5rem;
+    }
+  }
+</style>

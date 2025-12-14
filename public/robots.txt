@@ -1,0 +1,10 @@
+# Robots.txt for Klinik for Ortopædkirurgi
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://klinikforortopaedkirurgi.dk/sitemap-index.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1
