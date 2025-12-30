@@ -219,18 +219,6 @@ function generateEmailHtml(data: ContactFormData): string {
                   <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #2c3e50; white-space: pre-wrap;">${escapeHtml(data.message)}</p>
                 </div>
               </div>
-
-              <!-- Reply Button -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td align="center">
-                    <a href="mailto:${escapeHtml(data.email)}" style="display: inline-block; background-color: #1a5f7a; color: #ffffff; font-size: 14px; font-weight: 600; text-decoration: none; padding: 14px 28px; border-radius: 8px;">
-                      Svar på henvendelse
-                    </a>
-                  </td>
-                </tr>
-              </table>
-
             </td>
           </tr>
 
