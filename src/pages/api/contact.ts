@@ -49,7 +49,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (isRateLimited(ip)) {
       return new Response(
         JSON.stringify({ success: false, message: messages.rateLimited }),
-        { status: 429, headers: { 'Content-Type': 'application/json' } }
+        {
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'Retry-After': String(RATE_LIMIT_WINDOW / 1000)
+          }
+        }
       );
     }
 
@@ -81,12 +87,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Get environment variables from Cloudflare runtime
-    const runtime = locals.runtime as { env: { CONTACT_EMAIL?: string; RESEND_API_KEY?: string } };
-    const contactEmail = runtime?.env?.CONTACT_EMAIL || 'mail@bergmania.dk';
+    const runtime = locals.runtime as { env: Env };
+    const contactEmail = runtime?.env?.CONTACT_EMAIL;
     const resendApiKey = runtime?.env?.RESEND_API_KEY;
+    const sendingEmail = runtime?.env?.SENDING_EMAIL;
 
-    if (!resendApiKey) {
-      console.error('RESEND_API_KEY not configured');
+    if (!contactEmail || !resendApiKey) {
+      console.error('Missing environment variables:', {
+        CONTACT_EMAIL: contactEmail ? 'set' : 'missing',
+        RESEND_API_KEY: resendApiKey ? 'set' : 'missing'
+      });
       return new Response(
         JSON.stringify({ success: false, message: messages.emailNotConfigured }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
@@ -98,7 +108,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // Send email using Resend SDK
     const { error } = await resend.emails.send({
-      from: `${i18n.site.title} <noreply@bergmania.dk>`,
+      from: `${i18n.site.title} <${sendingEmail}>`,
       to: [contactEmail],
       replyTo: data.email,
       subject: `${i18n.email.newInquiryFrom} ${data.name}`,

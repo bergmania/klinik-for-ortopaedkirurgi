@@ -10,8 +10,5 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true,
-	"vars": {
-		"CONTACT_EMAIL": "mail@bergmania.dk"
-	}
+	"upload_source_maps": true
 }
