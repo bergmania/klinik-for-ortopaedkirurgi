@@ -92,10 +92,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const resendApiKey = runtime?.env?.RESEND_API_KEY;
     const sendingEmail = runtime?.env?.SENDING_EMAIL;
 
-    if (!contactEmail || !resendApiKey) {
+    if (!contactEmail || !resendApiKey || !sendingEmail) {
       console.error('Missing environment variables:', {
-        CONTACT_EMAIL: contactEmail ? 'set' : 'missing',
-        RESEND_API_KEY: resendApiKey ? 'set' : 'missing'
+        CONTACT_EMAIL: contactEmail ? 'set: ' + contactEmail : 'missing',
+        RESEND_API_KEY: resendApiKey ? 'set: ' + resendApiKey : 'missing',
+        SENDING_EMAIL: sendingEmail ? 'set: ' + sendingEmail : 'missing',
       });
       return new Response(
         JSON.stringify({ success: false, message: messages.emailNotConfigured }),
